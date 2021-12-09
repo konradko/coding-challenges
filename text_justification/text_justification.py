@@ -5,7 +5,7 @@ class TextJustification:
     def get_justified_lines(self, words: list[str]) -> list[str]:
         justified_lines = []
 
-        line = []
+        line: list[str] = []
         line_words_length = 0
 
         for word in words:
