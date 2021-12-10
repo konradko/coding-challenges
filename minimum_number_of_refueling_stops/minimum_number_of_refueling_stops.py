@@ -1,25 +1,24 @@
 def get_minimum_number_of_refueling_stops(target: int, fuel: int, stations: list[list[int]]) -> int:
-    fuel_at_stations = []
-    stations.append((target, target))
+    # Used for priority queue / heap-max
+    stations_fuel = []
+    # Add starting point and target as stations with zero fuel
+    stations = [[0, 0]] + stations + [[target, 0]]
+    refueling_stops = 0
 
-    minimum_number_of_refueling_stops = 0
-    previous_distance = 0
+    for index in range(1, len(stations)):
+        fuel -= stations[index][0] - stations[index - 1][0]
 
-    for station_distance, station_fuel in stations:
-        fuel -= station_distance - previous_distance
+        while stations_fuel and fuel < 0:
+            most_fuel = max(stations_fuel)
+            stations_fuel.remove(most_fuel)
 
-        while fuel_at_stations and fuel < 0:
-            most_fuel_at_station = max(fuel_at_stations)
-            fuel_at_stations.remove(most_fuel_at_station)
-
-            fuel += most_fuel_at_station
-            minimum_number_of_refueling_stops += 1
+            fuel += most_fuel
+            refueling_stops += 1
 
         if fuel < 0:
-            minimum_number_of_refueling_stops = -1
+            refueling_stops = -1
             break
 
-        fuel_at_stations.append(station_fuel)
-        previous_distance = station_distance
+        stations_fuel.append(stations[index][1])
 
-    return minimum_number_of_refueling_stops
+    return refueling_stops
